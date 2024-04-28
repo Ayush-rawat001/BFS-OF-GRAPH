@@ -1,0 +1,62 @@
+import java.util.*;
+
+public class Graph {
+    private int V; // Number of vertices
+    private List<List<Integer>> adj; // Adjacency list
+
+    public Graph(int V) {
+        this.V = V;
+        adj = new ArrayList<>(V);
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+    }
+
+    public void addEdge(int u, int v) {
+        adj.get(u).add(v); // Add edge from u to v
+    }
+
+    public List<Integer> bfs(int start) {
+        List<Integer> traversalOrder = new ArrayList<>();
+        boolean[] visited = new boolean[V];
+        Queue<Integer> queue = new LinkedList<>();
+
+        // Initialize the BFS with the start node
+        queue.add(start);
+        visited[start] = true;
+
+        while (!queue.isEmpty()) {
+            int node = queue.poll(); // Dequeue the front node
+            traversalOrder.add(node);
+
+            // Enqueue all adjacent nodes that haven't been visited
+            for (int neighbor : adj.get(node)) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    queue.add(neighbor);
+                }
+            }
+        }
+
+        return traversalOrder;
+    }
+
+    public static void main(String[] args) {
+        int V = 5;
+        Graph graph = new Graph(V);
+        
+        // Add edges according to the given adjacency list
+        graph.addEdge(0, 1);
+        graph.addEdge(0, 2);
+        graph.addEdge(0, 3);
+        graph.addEdge(2, 4);
+
+        List<Integer> traversalOrder = graph.bfs(0);
+
+        // Print the traversal order
+        System.out.println("BFS Traversal starting from node 0:");
+        for (int node : traversalOrder) {
+            System.out.print(node + " ");
+        }
+    }
+}
