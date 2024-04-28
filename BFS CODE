@@ -1,0 +1,85 @@
+import java.util.*;
+
+class TreeNode {
+    int val; // Node value
+    List<TreeNode> children; // List of child nodes
+    
+    public TreeNode(int val) {
+        this.val = val;
+        this.children = new ArrayList<>(); // Initialize children list
+    }
+    
+    public void addChild(TreeNode child) {
+        this.children.add(child);
+    }
+}
+
+public class Tree {
+    TreeNode root; // Root node
+    
+    public Tree(int rootVal) {
+        this.root = new TreeNode(rootVal);
+    }
+    
+    public void bfs() {
+        if (root == null) {
+            System.out.println("The tree is empty.");
+            return;
+        }
+        
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        List<Integer> traversalOrder = new ArrayList<>();
+        
+        while (!queue.isEmpty()) {
+            TreeNode currentNode = queue.poll();
+            traversalOrder.add(currentNode.val);
+            
+            for (TreeNode child : currentNode.children) {
+                queue.add(child);
+            }
+        }
+        
+        System.out.println("BFS Traversal:");
+        for (Integer val : traversalOrder) {
+            System.out.print(val + " ");
+        }
+        System.out.println();
+    }
+    
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the value of the root node: ");
+        int rootVal = scanner.nextInt();
+        
+        Tree tree = new Tree(rootVal); // Create a tree with the root node
+        
+        // Map to store references to TreeNode objects
+        Map<Integer, TreeNode> nodes = new HashMap<>();
+        nodes.put(rootVal, tree.root);
+        
+        System.out.print("Enter the number of child relationships: ");
+        int numRelationships = scanner.nextInt();
+        
+        System.out.println("Enter parent-child pairs:");
+        for (int i = 0; i < numRelationships; i++) {
+            int parentVal = scanner.nextInt();
+            int childVal = scanner.nextInt();
+            
+            // Ensure parent node exists or create it
+            TreeNode parentNode = nodes.getOrDefault(parentVal, new TreeNode(parentVal));
+            TreeNode childNode = nodes.getOrDefault(childVal, new TreeNode(childVal));
+            
+            // Add child to the parent node
+            parentNode.addChild(childNode);
+            
+            // Store in the map
+            nodes.put(parentVal, parentNode);
+            nodes.put(childVal, childNode);
+        }
+        
+        // Perform BFS traversal
+        tree.bfs();
+    }
+}
